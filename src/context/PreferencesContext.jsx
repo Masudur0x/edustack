@@ -14,6 +14,19 @@ const TRANSLATIONS = {
     'nav.signOut':       'Sign Out',
     'nav.signedInAs':    'Signed in as',
 
+    // Welcome nudge (first-visit onboarding prompt)
+    'nudge.eyebrow':        'Personalize',
+    'nudge.title':          'Let’s build your learning path',
+    'nudge.body':           'Answer 5 quick questions and EduStack shapes your courses, feed and study path around you — your major, your goal, your pace.',
+    'nudge.meta.questions': '5 questions',
+    'nudge.meta.time':      'about a minute',
+    'nudge.meta.free':      'free, no card',
+    'nudge.cta':            'Get started free',
+    'nudge.dismiss':        'I’ll look around first',
+    'nudge.pill':           'Personalize your journey',
+    'nudge.pillCta':        'Start',
+    'nudge.close':          'Dismiss',
+
     // Hero
     'hero.badge':        'Built in Bangladesh',
     'hero.subhead':      'Free courses, certifications and labs — curated by AI for your major and Bangladesh’s job market.',
@@ -234,6 +247,19 @@ const TRANSLATIONS = {
     'nav.dashboard':     'ড্যাশবোর্ড',
     'nav.signOut':       'সাইন আউট',
     'nav.signedInAs':    'হিসেবে সাইন ইন',
+
+    // Welcome nudge (first-visit onboarding prompt)
+    'nudge.eyebrow':        'ব্যক্তিগতকরণ',
+    'nudge.title':          'আপনার শেখার পথ তৈরি করি',
+    'nudge.body':           '৫টি দ্রুত প্রশ্নের উত্তর দিন — EduStack আপনার মেজর, লক্ষ্য ও গতির সাথে মিলিয়ে কোর্স, ফিড ও শেখার পথ সাজিয়ে দেবে।',
+    'nudge.meta.questions': '৫টি প্রশ্ন',
+    'nudge.meta.time':      'প্রায় এক মিনিট',
+    'nudge.meta.free':      'বিনামূল্যে, কার্ড লাগবে না',
+    'nudge.cta':            'বিনামূল্যে শুরু করুন',
+    'nudge.dismiss':        'আগে একটু ঘুরে দেখি',
+    'nudge.pill':           'আপনার যাত্রা সাজিয়ে নিন',
+    'nudge.pillCta':        'শুরু',
+    'nudge.close':          'বন্ধ করুন',
 
     // Hero
     'hero.badge':        'বাংলাদেশে তৈরি',

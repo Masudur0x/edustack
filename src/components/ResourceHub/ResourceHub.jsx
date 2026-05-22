@@ -41,7 +41,7 @@ function CourseCard({ course }) {
       <div className="flex items-center justify-between mt-auto pt-3 border-t border-[#a3e635]/10">
         <div>
           <p className="text-xs text-[#a3e635] font-medium">{course.provider}</p>
-          <p className="text-xs text-white/40">{course.duration}</p>
+          <p className="text-xs text-white/55">{course.duration}</p>
         </div>
         <div className="flex items-center gap-1 text-xs text-amber-400">
           <Star size={11} fill="currentColor" /> {course.rating}
@@ -75,7 +75,7 @@ function CertCard({ cert }) {
         {stars.map((filled, i) => (
           <Star key={i} size={11} className={filled ? 'text-amber-400 fill-amber-400' : 'text-white/15'} />
         ))}
-        <span className="text-xs text-white/35 ml-1">Industry recognition</span>
+        <span className="text-xs text-white/55 ml-1">Industry recognition</span>
       </div>
       <div className="flex flex-wrap gap-1 mb-3">
         {cert.skills.slice(0, 3).map(s => (
@@ -83,7 +83,7 @@ function CertCard({ cert }) {
         ))}
       </div>
       <div className="mt-auto pt-3 border-t border-[#a3e635]/10 flex items-center justify-between">
-        <span className="text-xs text-white/40">{cert.estimatedTime}</span>
+        <span className="text-xs text-white/55">{cert.estimatedTime}</span>
         <button className="btn-primary text-xs px-3 py-1.5 gap-1">
           View Cert <ExternalLink size={11} />
         </button>
@@ -157,25 +157,25 @@ export default function ResourceHub() {
 
       {/* Header */}
       <div className="mb-8">
-        <span className="text-[#a3e635] text-sm accent-text block mb-2">Free Resource Hub</span>
+        <span className="block mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#a3e635]">Free Resource Hub</span>
         <h1 className="text-3xl text-white mb-2" style={{ fontFamily: "'Archivo Black', sans-serif" }}>
           Learn without limits
         </h1>
-        <p className="text-white/55">200+ free courses, certifications, and AI tools â€” no login required to browse.</p>
+        <p className="text-white/55 max-w-2xl">200+ free courses, certifications, and AI tools. No login required to browse.</p>
       </div>
 
       {/* Tabs */}
       <div className="flex gap-1 border border-[#1e2028] rounded-xl p-1 mb-6 overflow-x-auto" style={{ background: 'rgba(13,15,20,0.9)' }}>
         {TABS.map(t => (
           <button key={t.id} onClick={() => { setTab(t.id); setCatFilter(''); setLevelFilter('') }}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium flex-shrink-0 transition-all ${
+            className={`group flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium flex-shrink-0 transition-colors ${
               tab === t.id
-                ? 'text-[#0a0b0f] bg-[#a3e635] font-bold'
-                : 'text-white/50 hover:text-white hover:bg-[#13151a]'
+                ? 'bg-[#a3e635]/12 text-[#a3e635]'
+                : 'text-white/55 hover:text-white hover:bg-white/[0.04]'
             }`}>
-            <t.icon size={15} />
+            <t.icon size={15} className={tab === t.id ? 'text-[#a3e635]' : 'text-white/45 group-hover:text-white/80'} />
             {t.label}
-            <span className={`text-xs px-1.5 py-0.5 rounded-full ${tab === t.id ? 'bg-[#0a0b0f]/20 text-[#0a0b0f]' : 'bg-[#13151a] text-white/40'}`}>
+            <span className={`text-xs px-1.5 py-0.5 rounded-full font-semibold ${tab === t.id ? 'bg-[#a3e635]/20 text-[#a3e635]' : 'bg-white/[0.06] text-white/45'}`}>
               {t.count}
             </span>
           </button>
@@ -236,7 +236,7 @@ export default function ResourceHub() {
         </div>
       )}
 
-      <p className="text-white/35 text-xs mb-4">
+      <p className="text-white/55 text-xs mb-4">
         Showing {filtered.length} {tab === 'courses' ? 'courses' : tab === 'certs' ? 'certifications' : 'tools'}
         {hasFilters ? ' (filtered)' : ''}
       </p>
@@ -245,7 +245,7 @@ export default function ResourceHub() {
         <div className="text-center py-20">
           <Search size={40} className="text-white/15 mx-auto mb-3" />
           <p className="text-white/50 font-medium">No results found</p>
-          <p className="text-white/30 text-sm">Try adjusting your search or filters</p>
+          <p className="text-white/45 text-sm">Try adjusting your search or filters</p>
           <button onClick={clearFilters} className="btn-ghost text-sm mt-3 text-[#a3e635]">Clear filters</button>
         </div>
       ) : (

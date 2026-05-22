@@ -1,7 +1,7 @@
 ﻿import { useState, useMemo } from 'react'
 import {
   MessageSquare, ThumbsUp, CheckCircle2, Plus, Search,
-  Clock, X, Send, Users,
+  Clock, X, Send, Users, Globe,
 } from 'lucide-react'
 import { FORUM_POSTS, MAJORS } from '../../data/mockData.js'
 import { useApp } from '../../context/AppContext.jsx'
@@ -42,7 +42,7 @@ function PostCard({ post, onClick }) {
             className={`p-1.5 rounded-lg transition-colors ${upvoted ? 'text-[#a3e635] bg-[#a3e635]/10' : 'text-white/30 hover:text-[#a3e635] hover:bg-[#a3e635]/10'}`}>
             <ThumbsUp size={14} />
           </button>
-          <span className="text-xs font-bold text-white/40">{voteCount}</span>
+          <span className="text-xs font-bold text-white/55">{voteCount}</span>
         </div>
 
         {/* Content */}
@@ -58,7 +58,7 @@ function PostCard({ post, onClick }) {
           </div>
 
           <h3 className="text-sm font-semibold text-white mb-1 line-clamp-2">{post.title}</h3>
-          <p className="text-xs text-white/45 line-clamp-2 mb-2">{post.content}</p>
+          <p className="text-xs text-white/55 line-clamp-2 mb-2">{post.content}</p>
 
           <div className="flex items-center gap-3 flex-wrap">
             <div className="flex items-center gap-1.5">
@@ -66,13 +66,13 @@ function PostCard({ post, onClick }) {
                 style={{ background: 'linear-gradient(135deg, #a3e635, #008156)' }}>
                 {post.author.name.charAt(0)}
               </div>
-              <span className="text-xs text-white/50">{post.author.name}</span>
-              <span className="text-[10px] text-[#a3e635]">Â·{post.author.reputation}pts</span>
+              <span className="text-xs text-white/60">{post.author.name}</span>
+              <span className="text-[10px] text-[#a3e635]">{post.author.reputation} pts</span>
             </div>
-            <span className="text-xs text-white/30 flex items-center gap-1">
+            <span className="text-xs text-white/55 flex items-center gap-1">
               <Clock size={10} /> {timeAgo(post.timestamp)}
             </span>
-            <span className="text-xs text-white/30 flex items-center gap-1">
+            <span className="text-xs text-white/55 flex items-center gap-1">
               <MessageSquare size={10} /> {post.replies}
             </span>
           </div>
@@ -80,7 +80,7 @@ function PostCard({ post, onClick }) {
           {post.tags?.length > 0 && (
             <div className="flex gap-1 mt-2 flex-wrap">
               {post.tags.map(t => (
-                <span key={t} className="text-[10px] text-white/35 bg-[#13151a] border border-[#a3e635]/15 px-2 py-0.5 rounded-full">
+                <span key={t} className="text-[10px] text-white/50 bg-[#13151a] border border-[#a3e635]/15 px-2 py-0.5 rounded-full">
                   #{t}
                 </span>
               ))}
@@ -124,7 +124,7 @@ function PostModal({ post, onClose }) {
               )}
             </div>
             <h2 className="text-white font-semibold text-lg" style={{ fontFamily: "'Archivo Black', sans-serif" }}>{post.title}</h2>
-            <p className="text-xs text-white/40 mt-1 accent-text">{post.author.name} Â· {timeAgo(post.timestamp)}</p>
+            <p className="text-xs text-white/55 mt-1 flex items-center gap-1.5"><span>{post.author.name}</span><span className="w-1 h-1 rounded-full bg-white/25" aria-hidden="true" /><span>{timeAgo(post.timestamp)}</span></p>
           </div>
           <button onClick={onClose} className="text-white/30 hover:text-[#a3e635] p-1 rounded-lg hover:bg-[#1a1c24] flex-shrink-0 transition-colors">
             <X size={18} />
@@ -136,12 +136,12 @@ function PostModal({ post, onClose }) {
           {post.tags?.length > 0 && (
             <div className="flex gap-1 flex-wrap mb-4">
               {post.tags.map(t => (
-                <span key={t} className="text-[10px] text-white/35 bg-[#13151a] border border-[#a3e635]/15 px-2 py-0.5 rounded-full">#{t}</span>
+                <span key={t} className="text-[10px] text-white/50 bg-[#13151a] border border-[#a3e635]/15 px-2 py-0.5 rounded-full">#{t}</span>
               ))}
             </div>
           )}
           <div className="space-y-3 mb-4">
-            <p className="text-xs text-white/30 font-semibold uppercase tracking-wider accent-text">{replies.length} replies</p>
+            <p className="text-xs text-white/45 font-semibold uppercase tracking-wider">{replies.length} replies</p>
             {replies.map(r => (
               <div key={r.id} className="flex gap-3 p-3 bg-[#13151a] border border-[#1e2028] rounded-xl">
                 <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-[#001F14] flex-shrink-0"
@@ -149,7 +149,7 @@ function PostModal({ post, onClose }) {
                   {r.author.charAt(0)}
                 </div>
                 <div>
-                  <p className="text-xs font-medium text-white">{r.author} <span className="text-white/35 font-normal">Â· {timeAgo(r.timestamp)}</span></p>
+                  <p className="text-xs font-medium text-white">{r.author} <span className="text-white/45 font-normal">· {timeAgo(r.timestamp)}</span></p>
                   <p className="text-xs text-white/60 mt-1 leading-relaxed">{r.text}</p>
                 </div>
               </div>
@@ -223,7 +223,7 @@ export default function Forum() {
   const [newPost, setNewPost]   = useState(false)
   const [posts, setPosts]       = useState(FORUM_POSTS)
 
-  const boards = [{ id: 'all', label: 'All Boards', icon: 'ðŸŒ' }, ...MAJORS.slice(0, 8)]
+  const boards = [{ id: 'all', label: 'All Boards', icon: null }, ...MAJORS.slice(0, 8)]
 
   const filtered = useMemo(() => posts.filter(p =>
     (board === 'all' || p.majorBoard === board) &&
@@ -250,8 +250,8 @@ export default function Forum() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <span className="text-[#a3e635] text-sm accent-text block mb-2">
-            <Users size={12} className="inline mr-1" />Community
+          <span className="flex items-center gap-1.5 mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#a3e635]">
+            <Users size={12} />Community
           </span>
           <h1 className="text-2xl text-white mb-1" style={{ fontFamily: "'Archivo Black', sans-serif" }}>Community Forum</h1>
           <p className="text-white/50 text-sm">Ask questions, share resources, collaborate</p>
@@ -264,7 +264,7 @@ export default function Forum() {
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Sidebar: boards */}
         <div className="lg:w-56 flex-shrink-0">
-          <p className="text-xs text-white/30 font-semibold uppercase tracking-wider mb-2 accent-text">Boards</p>
+          <p className="text-xs text-white/45 font-semibold uppercase tracking-wider mb-2">Boards</p>
           <div className="space-y-0.5">
             {boards.map(b => (
               <button key={b.id} onClick={() => setBoard(b.id)}
@@ -273,7 +273,7 @@ export default function Forum() {
                     ? 'bg-[#a3e635]/10 text-[#a3e635] border border-[#a3e635]/25 font-medium'
                     : 'text-white/50 hover:text-white hover:bg-[#13151a]'
                 }`}>
-                <span className="text-sm">{b.icon}</span>
+                {b.id === 'all' ? <Globe size={15} /> : <span className="text-sm">{b.icon}</span>}
                 <span className="truncate">{b.label}</span>
               </button>
             ))}
@@ -295,18 +295,17 @@ export default function Forum() {
           <div className="flex gap-2 mb-4 overflow-x-auto pb-1">
             {SUB_BOARDS.map(s => (
               <button key={s} onClick={() => setSubBoard(s)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium flex-shrink-0 transition-all ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium flex-shrink-0 transition-colors border ${
                   subBoard === s
-                    ? 'text-white border border-[#a3e635]/35'
-                    : 'bg-[#13151a] text-white/50 hover:text-white border border-transparent'
-                }`}
-                style={subBoard === s ? { background: 'linear-gradient(135deg, #a3e635, #22d3ee)' } : {}}>
+                    ? 'bg-[#a3e635]/12 text-[#a3e635] border-[#a3e635]/30'
+                    : 'text-white/55 hover:text-white border-[#1e2028] hover:bg-white/[0.04]'
+                }`}>
                 {s}
               </button>
             ))}
           </div>
 
-          <p className="text-white/30 text-xs mb-3 accent-text">{filtered.length} posts</p>
+          <p className="text-white/55 text-xs mb-3">{filtered.length} posts</p>
 
           {filtered.length === 0 ? (
             <div className="text-center py-16">

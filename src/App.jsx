@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { AppProvider, useApp } from './context/AppContext.jsx'
 import { PreferencesProvider } from './context/PreferencesContext.jsx'
@@ -8,6 +9,7 @@ import LandingPage from './components/Landing/LandingPage.jsx'
 import AuthModals from './components/Auth/AuthModals.jsx'
 import ResourceHub from './components/ResourceHub/ResourceHub.jsx'
 import Onboarding from './components/Onboarding/Onboarding.jsx'
+import WelcomeNudge from './components/Onboarding/WelcomeNudge.jsx'
 import Dashboard from './components/Dashboard/Dashboard.jsx'
 import Forum from './components/Forum/Forum.jsx'
 import Quiz from './components/Quiz/Quiz.jsx'
@@ -50,6 +52,16 @@ function AppRoutes() {
   const location = useLocation()
   const isAppPage = APP_ROUTES.some(r => location.pathname.startsWith(r))
 
+  // Collapsible sidebar — shared so the main content margin tracks the rail width.
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    try { return localStorage.getItem('edustack.sidebarCollapsed') === '1' } catch { return false }
+  })
+  const toggleSidebar = () => setSidebarCollapsed(prev => {
+    const next = !prev
+    try { localStorage.setItem('edustack.sidebarCollapsed', next ? '1' : '0') } catch { /* ignore */ }
+    return next
+  })
+
   const routes = (
     <Routes>
       <Route path="/" element={<LandingPage />} />
@@ -70,8 +82,8 @@ function AppRoutes() {
   if (isAppPage) {
     return (
       <div className="min-h-screen flex bg-[#0a0b0f]">
-        <Sidebar />
-        <main className="flex-1 ml-[224px] min-h-screen overflow-x-hidden">
+        <Sidebar collapsed={sidebarCollapsed} onToggle={toggleSidebar} />
+        <main className={`flex-1 min-h-screen overflow-x-hidden transition-[margin] duration-200 ease-out ${sidebarCollapsed ? 'ml-[72px]' : 'ml-[224px]'}`}>
           {routes}
         </main>
         <AuthModals />
@@ -89,6 +101,7 @@ function AppRoutes() {
       <Footer />
       <AuthModals />
       <Notification />
+      <WelcomeNudge />
     </div>
   )
 }

@@ -1,9 +1,9 @@
 ﻿import { useState, useEffect } from 'react'
-import { Brain, Clock, ChevronRight, CheckCircle, XCircle, Flag, ArrowRight, RotateCcw, TrendingUp, BookOpen, Award, Lock } from 'lucide-react'
+import { Brain, Clock, ChevronRight, ChevronLeft, CheckCircle, XCircle, Flag, ArrowRight, RotateCcw, TrendingUp, BookOpen, Sparkles } from 'lucide-react'
 import { QUIZZES } from '../../data/mockData.js'
 import { useApp } from '../../context/AppContext.jsx'
 
-// â”€â”€ Quiz Catalog â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Quiz Catalog
 function QuizCard({ quiz, onStart, prevScore }) {
   const levelCls = {
     Beginner:     'bg-[#a3e635]/15 text-[#a3e635] border border-[#a3e635]/30',
@@ -14,13 +14,13 @@ function QuizCard({ quiz, onStart, prevScore }) {
     <div className="card-hover flex flex-col">
       <div className="flex items-start justify-between mb-3">
         <span className={`badge ${levelCls[quiz.level]}`}>{quiz.level}</span>
-        <span className="text-xs text-white/35 flex items-center gap-1"><Clock size={11} /> {quiz.duration}m</span>
+        <span className="text-xs text-white/55 flex items-center gap-1"><Clock size={11} /> {quiz.duration}m</span>
       </div>
       <h3 className="text-white font-semibold mb-1">{quiz.title}</h3>
-      <p className="text-xs text-white/45 mb-1">
+      <p className="text-xs text-white/55 mb-1">
         Topic: <span className="text-[#a3e635]">{quiz.topic}</span>
       </p>
-      <p className="text-xs text-white/35 mb-3">{quiz.questions.length} questions</p>
+      <p className="text-xs text-white/55 mb-3">{quiz.questions.length} questions</p>
 
       {prevScore !== undefined && (
         <div className={`text-xs px-3 py-1.5 rounded-lg mb-3 font-medium ${
@@ -32,7 +32,7 @@ function QuizCard({ quiz, onStart, prevScore }) {
         </div>
       )}
 
-      <p className="text-xs text-white/35 mb-3">
+      <p className="text-xs text-white/55 mb-3">
         Scheduled: <span className="text-white/70">{quiz.scheduledDate}</span>
       </p>
 
@@ -43,7 +43,50 @@ function QuizCard({ quiz, onStart, prevScore }) {
   )
 }
 
-// â”€â”€ Taking a Quiz â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Featured (recommended) quiz — hero banner for the user's major
+function FeaturedQuiz({ quiz, onStart, prevScore }) {
+  const scoreCls = prevScore >= 80 ? 'text-[#a3e635]' : prevScore >= 60 ? 'text-amber-400' : 'text-red-400'
+  return (
+    <div className="card border-[#a3e635]/25 mb-8 relative overflow-hidden"
+      style={{ background: 'linear-gradient(135deg, rgba(163,230,53,0.12), rgba(26,28,36,0.97))' }}>
+      <div className="pointer-events-none absolute -top-20 -right-10 h-48 w-48 rounded-full opacity-50"
+        style={{ background: 'radial-gradient(circle, rgba(163,230,53,0.18), transparent 70%)' }} />
+      <div className="relative flex flex-col md:flex-row md:items-center gap-5">
+        <span className="inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl
+                         bg-[#a3e635]/12 border border-[#a3e635]/25 text-[#a3e635]
+                         shadow-[0_0_28px_rgba(163,230,53,0.22)]">
+          <Sparkles size={26} strokeWidth={2} />
+        </span>
+        <div className="flex-1 min-w-0">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#a3e635] mb-1.5">
+            Recommended for your major
+          </p>
+          <h3 className="text-white font-bold text-xl leading-tight" style={{ fontFamily: "'Archivo Black', sans-serif" }}>
+            {quiz.title}
+          </h3>
+          <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 mt-2.5 text-sm text-white/55">
+            <span className="text-[#a3e635] font-medium">{quiz.topic}</span>
+            <span className="w-1 h-1 rounded-full bg-white/25" aria-hidden="true" />
+            <span>{quiz.questions.length} questions</span>
+            <span className="w-1 h-1 rounded-full bg-white/25" aria-hidden="true" />
+            <span className="inline-flex items-center gap-1"><Clock size={13} /> {quiz.duration}m</span>
+            {prevScore !== undefined && (
+              <>
+                <span className="w-1 h-1 rounded-full bg-white/25" aria-hidden="true" />
+                <span>Last score: <span className={`font-semibold ${scoreCls}`}>{prevScore}%</span></span>
+              </>
+            )}
+          </div>
+        </div>
+        <button onClick={() => onStart(quiz)} className="btn-primary py-2.5 px-5 gap-1.5 shrink-0 w-full md:w-auto">
+          {prevScore !== undefined ? 'Retake Quiz' : 'Take Quiz'} <ArrowRight size={16} />
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// Taking a Quiz
 function QuizTaker({ quiz, onFinish }) {
   const [currentQ, setCurrentQ]   = useState(0)
   const [answers, setAnswers]     = useState({})
@@ -80,7 +123,7 @@ function QuizTaker({ quiz, onFinish }) {
           <div className="h-full rounded-full transition-all duration-300"
             style={{ width: `${progress * 100}%`, background: 'linear-gradient(90deg, #008156, #a3e635)' }} />
         </div>
-        <div className="flex items-center justify-between mt-2 text-xs text-white/35">
+        <div className="flex items-center justify-between mt-2 text-xs text-white/55">
           <span>Question {currentQ + 1} of {quiz.questions.length}</span>
           <span>{Object.keys(answers).length} answered</span>
         </div>
@@ -133,7 +176,7 @@ function QuizTaker({ quiz, onFinish }) {
 
         {review && (
           <div className="mt-4 p-3 bg-[#a3e635]/5 border border-[#a3e635]/20 rounded-xl">
-            <p className="text-xs text-[#a3e635] font-medium mb-1 accent-text">Explanation</p>
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-[#a3e635] mb-1">Explanation</p>
             <p className="text-xs text-white/60 leading-relaxed">{q.explanation}</p>
           </div>
         )}
@@ -142,7 +185,7 @@ function QuizTaker({ quiz, onFinish }) {
       {/* Navigation */}
       <div className="flex items-center justify-between">
         <button onClick={() => setCurrentQ(c => Math.max(0, c - 1))} disabled={currentQ === 0}
-          className="btn-secondary text-sm disabled:opacity-40">â† Previous</button>
+          className="btn-secondary text-sm disabled:opacity-40 gap-1"><ChevronLeft size={14} /> Previous</button>
 
         <div className="flex gap-2">
           {!review && allAnswered && (
@@ -151,7 +194,7 @@ function QuizTaker({ quiz, onFinish }) {
             </button>
           )}
           {currentQ < quiz.questions.length - 1 ? (
-            <button onClick={() => setCurrentQ(c => c + 1)} className="btn-primary text-sm">Next â†’</button>
+            <button onClick={() => setCurrentQ(c => c + 1)} className="btn-primary text-sm gap-1">Next <ChevronRight size={14} /></button>
           ) : (
             <button onClick={() => onFinish(answers)} className="btn-primary text-sm gap-1">
               Submit <ArrowRight size={14} />
@@ -163,7 +206,7 @@ function QuizTaker({ quiz, onFinish }) {
   )
 }
 
-// â”€â”€ Results â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Results
 function QuizResults({ quiz, answers, onRetake, onDone }) {
   const correct = quiz.questions.filter(q => answers[q.id] === q.correctAnswer).length
   const score   = Math.round((correct / quiz.questions.length) * 100)
@@ -217,7 +260,7 @@ function QuizResults({ quiz, answers, onRetake, onDone }) {
                         Correct: <span className="text-[#a3e635]">{q.options[q.correctAnswer]}</span>
                       </p>
                     )}
-                    <p className="text-xs text-white/35 mt-1 leading-relaxed">{q.explanation}</p>
+                    <p className="text-xs text-white/55 mt-1 leading-relaxed">{q.explanation}</p>
                   </div>
                 </div>
               </div>
@@ -252,7 +295,7 @@ function QuizResults({ quiz, answers, onRetake, onDone }) {
   )
 }
 
-// â”€â”€ Main â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Main
 export default function Quiz() {
   const { user } = useApp()
   const [phase, setPhase]             = useState('catalog')
@@ -261,6 +304,8 @@ export default function Quiz() {
 
   const majorQuizzes = QUIZZES.filter(q => q.major === user.major?.primary)
   const otherQuizzes = QUIZZES.filter(q => q.major !== user.major?.primary)
+  const featured     = majorQuizzes[0]
+  const rest         = [...majorQuizzes.slice(1), ...otherQuizzes]
 
   const start  = (quiz)    => { setActiveQuiz(quiz); setPhase('taking') }
   const finish = (answers) => { setFinalAnswers(answers); setPhase('results') }
@@ -271,35 +316,25 @@ export default function Quiz() {
       {phase === 'catalog' && (
         <>
           <div className="mb-8">
-            <span className="text-[#a3e635] text-sm accent-text block mb-2">
-              <Brain size={12} className="inline mr-1" />Quizzes
+            <span className="flex items-center gap-1.5 mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#a3e635]">
+              <Brain size={12} />Quizzes
             </span>
             <h1 className="text-2xl text-white mb-2" style={{ fontFamily: "'Archivo Black', sans-serif" }}>Subject-Specific Quizzes</h1>
-            <p className="text-white/50 text-sm">Test your knowledge, reveal gaps, and earn mastery badges. Scores feed your AI recommendations.</p>
+            <p className="text-white/55 text-sm">Test your knowledge, reveal gaps, and earn mastery badges. Scores feed your AI recommendations.</p>
           </div>
 
-          {majorQuizzes.length > 0 && (
-            <div className="mb-8">
-              <h2 className="text-white font-semibold mb-4 flex items-center gap-2" style={{ fontFamily: "'Archivo Black', sans-serif" }}>
-                <div className="w-6 h-6 icon-container"><Award size={13} className="text-[#a3e635]" /></div>
-                Quizzes for Your Major
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {majorQuizzes.map(q => (
-                  <QuizCard key={q.id} quiz={q} onStart={start} prevScore={user.quizScores?.[q.topic]} />
-                ))}
-              </div>
-            </div>
+          {featured && (
+            <FeaturedQuiz quiz={featured} onStart={start} prevScore={user.quizScores?.[featured.topic]} />
           )}
 
-          {otherQuizzes.length > 0 && (
+          {rest.length > 0 && (
             <div>
-              <h2 className="text-white/50 font-semibold mb-4 flex items-center gap-2">
-                <Lock size={14} className="text-white/30" />
-                <span>Other Subjects</span>
+              <h2 className="text-white font-semibold mb-4 flex items-center gap-2" style={{ fontFamily: "'Archivo Black', sans-serif" }}>
+                <div className="w-6 h-6 icon-container"><BookOpen size={13} className="text-[#a3e635]" /></div>
+                All Quizzes
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {otherQuizzes.map(q => (
+                {rest.map(q => (
                   <QuizCard key={q.id} quiz={q} onStart={start} prevScore={user.quizScores?.[q.topic]} />
                 ))}
               </div>
@@ -320,7 +355,7 @@ export default function Quiz() {
                       style={{ fontFamily: "'Archivo Black', sans-serif" }}>
                       {score}%
                     </p>
-                    <p className="text-xs text-white/40 mt-0.5 accent-text">{topic}</p>
+                    <p className="text-xs text-white/55 mt-0.5">{topic}</p>
                   </div>
                 ))}
               </div>
@@ -332,8 +367,8 @@ export default function Quiz() {
       {phase === 'taking' && activeQuiz && (
         <>
           <div className="flex items-center gap-3 mb-6">
-            <button onClick={reset} className="btn-secondary text-sm">â† Back to Quizzes</button>
-            <span className="text-white/45 text-sm accent-text">{activeQuiz.title}</span>
+            <button onClick={reset} className="btn-secondary text-sm gap-1"><ChevronLeft size={14} /> Back to Quizzes</button>
+            <span className="text-white/55 text-sm">{activeQuiz.title}</span>
           </div>
           <QuizTaker quiz={activeQuiz} onFinish={finish} />
         </>
@@ -343,7 +378,7 @@ export default function Quiz() {
         <>
           <div className="mb-6">
             <h2 className="text-2xl text-white mb-1" style={{ fontFamily: "'Archivo Black', sans-serif" }}>Quiz Results</h2>
-            <p className="text-white/45 text-sm accent-text">{activeQuiz.title}</p>
+            <p className="text-white/55 text-sm">{activeQuiz.title}</p>
           </div>
           <QuizResults
             quiz={activeQuiz}
