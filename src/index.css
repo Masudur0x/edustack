@@ -215,3 +215,19 @@
 
 /* ─── Modal backdrop ────────────────────────────────────── */
 .modal-backdrop { animation: fadeIn 0.2s ease-out; }
+
+/* ─── AI reason skeleton (transform-only shimmer, GPU-cheap) ─ */
+@keyframes aiShimmer { 100% { transform: translateX(100%); } }
+.ai-skeleton {
+  position: relative;
+  overflow: hidden;
+  background: rgba(255,255,255,0.05);
+}
+.ai-skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(163,230,53,0.12), transparent);
+  animation: aiShimmer 1.4s ease-in-out infinite;
+}

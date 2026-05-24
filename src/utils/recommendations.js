@@ -31,8 +31,11 @@ function scoreItem(item, user) {
   // Behavioral: already completed → penalize
   if (completedIds.includes(item.id)) score -= 10
 
-  // Quiz-driven: if low score in topic → boost foundational content
-  if (quizScores[item.topic] !== undefined && quizScores[item.topic] < 60) {
+  // Quiz-driven: a low score in a topic boosts foundational content in that area.
+  // Quizzes carry `topic`; courses/certs/tools carry `category` — match on either
+  // so a weak quiz visibly re-ranks the feed (the adaptive loop the demo shows).
+  const itemTopic = item.topic ?? item.category
+  if (itemTopic && quizScores[itemTopic] !== undefined && quizScores[itemTopic] < 60) {
     if (item.level === 'Beginner') score += W.behavior
   }
 

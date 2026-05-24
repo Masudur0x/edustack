@@ -9,6 +9,7 @@ import {
 import { useApp } from '../../context/AppContext.jsx'
 import { COURSES, QUIZZES, FORUM_POSTS, MAJORS } from '../../data/mockData.js'
 import { getRecommendations, computeProgress, getMilestone } from '../../utils/recommendations.js'
+import { useAiReasons } from '../../utils/aiReasons.js'
 
 // Milestones aligned to getMilestone() thresholds — each marks where that stage begins.
 const STAGES = [
@@ -145,12 +146,16 @@ function QuickStats({ user }) {
   )
 }
 
-function RecommendationCard({ item }) {
+function RecommendationCard({ item, aiReason, aiLoading }) {
   const { toggleSave, user } = useApp()
   const saved  = user?.savedResources?.includes(item.id)
   const icons  = { course: BookOpen, certification: Award, tool: Zap }
   const Icon   = icons[item._type] || BookOpen
   const typeCls = { course: 'badge-indigo', certification: 'badge-cyan', tool: 'badge-purple' }
+
+  // Live AI reason when available; otherwise the deterministic rule-based reason.
+  const reason = aiReason || item._reason
+  const isAi   = !!aiReason
 
   return (
     <div className="card-hover flex flex-col">
@@ -167,12 +172,28 @@ function RecommendationCard({ item }) {
       </div>
       <h4 className="text-sm font-semibold text-white mb-1 line-clamp-2 flex-1">{item.title || item.name}</h4>
       <p className="text-xs text-white/60 mb-3 line-clamp-2">{item.description}</p>
-      {item._reason && (
-        <p className="flex items-center gap-1.5 text-[11px] text-white/60 mb-2.5">
-        <Sparkles size={11} strokeWidth={2} className="text-[#a3e635] shrink-0" />
-        {item._reason}
-      </p>
-      )}
+
+      {/* AI reason line — shimmer while the model writes it, fall back if unavailable */}
+      <div className="mb-2.5 min-h-[1.1rem]">
+        {aiLoading ? (
+          <div className="flex items-center gap-1.5" aria-label="Generating personalized reason">
+            <Sparkles size={11} strokeWidth={2} className="text-[#a3e635]/50 shrink-0 animate-pulse" />
+            <span className="ai-skeleton h-2 w-full max-w-[170px] rounded-full" />
+          </div>
+        ) : reason && (
+          <p className="flex items-start gap-1.5 text-[11px] text-white/60 leading-snug">
+            <Sparkles size={11} strokeWidth={2} className="text-[#a3e635] shrink-0 mt-[1px]" />
+            <span>
+              {reason}
+              {isAi && (
+                <span className="ml-1.5 align-middle text-[8px] font-bold uppercase tracking-[0.12em] text-[#a3e635]/70">
+                  AI
+                </span>
+              )}
+            </span>
+          </p>
+        )}
+      </div>
       <button className="mt-auto text-xs btn-primary py-1.5 gap-1">
         {item._type === 'tool' ? 'Try Tool' : item._type === 'certification' ? 'View Cert' : 'Start Learning'}
         <ExternalLink size={11} />
@@ -364,6 +385,7 @@ export default function Dashboard() {
   const { user } = useApp()
   const navigate = useNavigate()
   const recommendations = getRecommendations(user, { limit: 4 })
+  const { reasons: aiReasons, loading: aiLoading } = useAiReasons(user, recommendations)
   const major = MAJORS.find(m => m.id === user.major?.primary)
 
   return (
@@ -407,14 +429,21 @@ export default function Dashboard() {
                 <h3 className="text-white font-semibold flex items-center gap-2">
                   <Brain size={16} className="text-[#a3e635]" /> Recommended For You
                 </h3>
-                <p className="text-xs text-white/55">Updated daily based on your progress</p>
+                <p className="text-xs text-white/55">Personalized by AI for your major, level, and goals</p>
               </div>
               <button onClick={() => navigate('/resources')} className="text-xs text-[#a3e635]/70 hover:text-[#a3e635] flex items-center gap-0.5">
                 Browse all <ChevronRight size={12} />
               </button>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {recommendations.map((item, i) => <RecommendationCard key={item.id || i} item={item} />)}
+              {recommendations.map((item, i) => (
+                <RecommendationCard
+                  key={item.id || i}
+                  item={item}
+                  aiReason={aiReasons[item.id]}
+                  aiLoading={aiLoading && !aiReasons[item.id]}
+                />
+              ))}
             </div>
           </div>
           <ForumActivity />
