@@ -14,6 +14,7 @@ import Dashboard from './components/Dashboard/Dashboard.jsx'
 import Forum from './components/Forum/Forum.jsx'
 import Quiz from './components/Quiz/Quiz.jsx'
 import VirtualLabs from './components/VirtualLabs/VirtualLabs.jsx'
+import Docs from './components/Docs/Docs.jsx'
 
 // Routes that use the in-app Sidebar layout. /onboarding intentionally excluded
 // — onboarding has its own self-contained layout and runs pre-signup.
@@ -65,6 +66,7 @@ function AppRoutes() {
   const routes = (
     <Routes>
       <Route path="/" element={<LandingPage />} />
+      <Route path="/docs" element={<Docs />} />
       <Route path="/resources" element={<ResourceHub />} />
       <Route path="/onboarding" element={
         user?.onboardingComplete
